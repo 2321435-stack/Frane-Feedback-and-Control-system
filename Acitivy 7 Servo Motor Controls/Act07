@@ -1,0 +1,44 @@
+#include <Arduino.h>
+#include <Servo.h>
+
+Servo servoMotor;
+const int SERVO_PIN = 9;
+
+void setup() {
+  Serial.begin(9600);
+  servoMotor.attach(SERVO_PIN);
+  servoMotor.write(0);
+
+  Serial.println("Arduino: Ready for degree input (0-180).");
+}
+
+void loop() {
+
+  if (Serial.available()) {
+
+    int angle = Serial.parseInt();
+
+    // clear remaining serial buffer
+    while (Serial.available()) {
+      Serial.read();
+    }
+
+    if (angle >= 0 && angle <= 180) {
+
+      servoMotor.write(angle);
+
+      Serial.print("Servo moved to ");
+      Serial.print(angle);
+      Serial.println(" degrees.");
+
+    } 
+    else {
+
+      Serial.print("Invalid angle (");
+      Serial.print(angle);
+      Serial.println("). Please send 0-180.");
+
+    }
+  }
+
+}
